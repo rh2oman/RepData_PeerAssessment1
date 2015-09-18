@@ -6,7 +6,7 @@ First set the working directory.
 ```r
 setwd("/Users/waterman/Documents/Data Science Courses/Reproducible Research/Project1/RepData_PeerAssessment1")
 ```
-Now reading the data into a dataframe.
+Now reading the data into a data frame.
 
 ```r
 activitydata <- read.csv("./activity.csv", stringsAsFactors = FALSE)
@@ -35,30 +35,23 @@ hist(stepsperdaydata$steps,
 
 ```r
 meanstepsperday <- mean(stepsperdaydata$steps, na.rm = TRUE)
-print(meanstepsperday)
 ```
-
-```
-## [1] 10766.19
-```
+The mean number of steps per day is 10766.19.
+<br><br>
 Calculating and printing the median number of steps per day.
 
 ```r
 medianstepsperday <- median(stepsperdaydata$steps, na.rm = TRUE)
-print(medianstepsperday)
 ```
-
-```
-## [1] 10765
-```
+The median steps per day is 10765.  
 
 ## What is the average daily activity pattern?
-Calculate the mean steps per interval (for this section NA have been removed which will impact the interpretation of the data).
+Calculate the mean steps per interval (for this section NAs have been removed which will impact the interpretation of the data).
 
 ```r
 meanstepsperintervaldata <- ddply(activitydata, c("interval"), summarize, meansteps = mean(steps, na.rm = TRUE))
 ```
-In this section the Time Series plot is produced.
+This bit of R script produces a the Time Series plot of the mean steps per interval.
 
 ```r
 plot(meanstepsperintervaldata$interval, meanstepsperintervaldata$meansteps,
@@ -70,7 +63,7 @@ plot(meanstepsperintervaldata$interval, meanstepsperintervaldata$meansteps,
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
-<br>This section of code sorts the intervals by size in descending order and prints the interval that contains the largest number of steps.
+<br>This bit of code sorts the intervals by size in descending order and prints the interval that contains the largest number of steps.
 
 ```r
 maxinterval <- meanstepsperintervaldata[order(-meanstepsperintervaldata$meansteps), ]
@@ -81,10 +74,10 @@ head(maxinterval, n=1)
 ##     interval meansteps
 ## 104      835  206.1698
 ```
-Based on the results the interval that on average has the larges number of steps is 835.
+Based on R scrip, the interval that has the larges number of steps on average 835.
 
 ## Imputing missing values
-Determining the number of rows with missing values.
+This piece of R scipt counts and prints the number of rows with missing values.
 
 ```r
 countNAs <- (sum(is.na(activitydata)))
@@ -94,10 +87,11 @@ print(countNAs)
 ```
 ## [1] 2304
 ```
-Now replacing NA values with the mean value of the interval period
-First there a function is created to do the replacement.
-Second the function is call.
-Third the data frame is reordered by date then interval.
+The following R script replaces the intervals with NAs with the mean of that interval.
+This is achieved in three steps: 
+1. A function is built that replaces the value passed to it with itself or the mean of the variable if the value is NA.
+2. A new data frame with the mean interval value replacing NAs is created using ddply and the new function. 
+3.The data frame is reordered by date then interval.
 
 ```r
 impute.mean <- function(x) replace(x, is.na(x), mean(x, na.rm = TRUE))
@@ -135,11 +129,11 @@ print(newmedianstepsperday)
 ```
 ## [1] 10766.19
 ```
-The newly calculated mean is 1.076619\times 10^{4} and the newly calculated median is 1.076619\times 10^{4}. Changing the NAs to the mean of the interval value does not change the reported mean, however the median is shifted and is now equal to the original reported mean. <br><br>
+The newly calculated mean is 10766.19 and the newly calculated median is 10766.19. Changing the NAs to the mean of the interval value does not change the reported mean, however the median is shifted and is now equal to the original reported mean. <br><br>
 The impact of imputing missing data on the estimates of the total daily number of steps would be dependent upon the question be asked. Based on the question you are trying to answer, you would need to decide whether that was the most appropriate course of action and document your rational accordingly. 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-This part of the R scrip creates a vector containing the days in the weekend. The weekdays function and and the newly created weekendlist vector and then used to create a factor with two levels – “weekday” and “weekend”.
+This part of the R script creates a vector containing the days in the weekend. The weekdays function and and the newly created weekendlist vector and then used to create a factor with two levels – “weekday” and “weekend”.
 
 ```r
 weekendlist <- c('Saturday','Sunday')
@@ -153,7 +147,7 @@ Here a new data frame is created that contains the mean number of steps for each
 newmeanstepsperintervaldata <- ddply(newactivitydata, c("interval", "weekend"), 
                                      summarize, meansteps = mean(steps, na.rm = TRUE))
 ```
-Now the lattice library is called and the plot is created.
+Now the lattice library is called and a plot for both meansteps by interval for both weekdays and weekend days are created.
 
 ```r
 library(lattice)
